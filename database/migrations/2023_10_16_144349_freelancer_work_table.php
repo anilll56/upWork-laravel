@@ -11,6 +11,16 @@ return new class extends Migration
      */
     public function up(): void
     {
+        Schema::create('freelancer-work-table', function (Blueprint $table) {
+        $table->id();
+        $table->string('name');
+        $table->string('email');
+        $table->string('work-type');
+        $table->string('work-description');
+        $table->integer('work-price');
+        $table->boolen('hire' , [true,false])->default(false);
+
+        });
         //
     }
 

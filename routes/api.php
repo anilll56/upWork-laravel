@@ -2,6 +2,8 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\UserController;
+use App\Http\Controllers\UserWorkController;
 
 /*
 |--------------------------------------------------------------------------
@@ -17,3 +19,16 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
+
+
+Route :: post("freelancerUserlogin",[UserController::class,'freelancerUserlogin']);
+Route :: post("freelancerUserRegister",[UserController::class,'freelancerUserRegister']);
+Route :: post("clientUserRegister",[UserController::class,'clientUserRegister']);
+Route :: post("clienUserLogin",[UserController::class,'clienUserLogin']);
+
+Route :: post("OpenClientWork",[UserWorkController::class,'OpenClientWork']);
+Route :: get("getTheClientJob",[UserWorkController::class,'getTheClientJob']);
+Route :: post("deleteClientWork",[UserWorkController::class,'deleteClientWork']);
+Route :: post("openFreelancerWork",[UserWorkController::class,'openFreelancerWork']);
+Route :: get("getTheFreelancerJob",[UserWorkController::class,'getTheFreelancerJob']);
+Route :: post("deleteFreelancerWork",[UserWorkController::class,'deleteFreelancerWork']);

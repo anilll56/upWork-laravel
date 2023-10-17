@@ -18,8 +18,8 @@ return new class extends Migration
         $table->string('password');
         $table->rememberToken();
         $table->string('talent')->nullable();
-        $table->string('profile_photo_path', 2048)->nullable();
-        $table->integer('stars');
+        $table->integer('price');
+        $table->string('role')->default('freelancer');
         });
     }
 
