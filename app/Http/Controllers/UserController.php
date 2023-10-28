@@ -1,14 +1,53 @@
 <?php
 
 namespace App\Http\Controllers;
+namespace App\Models;
+
+namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use App\Models\FreelancerUser;
 
+
+
+    
 class UserController extends Controller
 {
+    /**
+* The customer implementation.
+*
+* @var FreelancerUser
+*/
+protected FreelancerUser $freelancerUser;
+
+/**
+* Create a new controller instance.
+*
+* @param FreelancerUser  $freelancerUser
+* @return void
+*/
+public function __construct(FreelancerUser $freelancerUser)
+{
+$this-> freelancerUser = $freelancerUser;
+}
+
+    function getFreelancerUserWorkById(Request $req){
+        $id = $req->input('id');
+        $customUserTable = 'freelancer-work-table';
+        $data = [
+            'id' => $id,
+        ];
+        $user = DB::table($customUserTable)->where('id', $id)->get();
+        if($data){
+            return response()->json(['message' => 'başarıyla silindi', 'user' => $user], 200);
+        }
+        else{
+            return response()->json(['message' => 'silinemedi'], 404);
+        }
+} 
     function freelancerUserRegister(Request $req){
         $name = $req->input('name');
         $email = $req->input('email');
@@ -17,16 +56,16 @@ class UserController extends Controller
         $price = $req->input('price');
 
         $customUserTable = 'freelancer-users';
-        $data = [
-            'name' => $name,
-            'email' => $email,
-            'password' => Hash::make($password),
-            'talent' => $talent,
-            'stars' => $price,
-        ];
+
+        $freelancerUser = new FreelancerUser();
+        $freelancerUser->name = $name;
+        $freelancerUser->email = $email;
+        $freelancerUser->password = Hash::make($password);
+        $freelancerUser->talent = $talent;
+        $freelancerUser->price = $price;
+        $freelancerUser->save();
         
-        DB::table($customUserTable)->insert($data);
-        if($data){
+        if($freelancerUser){
             return "başarılı";
         }
         else{
@@ -59,17 +98,23 @@ class UserController extends Controller
         $email = $req->input('email');
         $password = $req->input('password');
         $customUserTable = 'freelancer-users';
-        $user = DB::table($customUserTable)->where('email', $email)->first();
+
+    
+        $freelancerUser = $this->freelancerUser->findFreelancerUser($email, $password);
         
-        if (!$user) {
+        if (!$freelancerUser) {
             return response()->json(['message' => 'Kullanıcı bulunamadı'], 404);
         }
         
-        if (!password_verify($password, $user->password)) {
-            return response()->json(['message' => 'Şifre uyuşmuyor', $user], 401);
+        if (!password_verify($password, $freelancerUser->password)) {
+            return response()->json(['message' => 'Şifre uyuşmuyor'], 401);
+
+        } if ($freelancerUser) {
+            return response()->json(['message' => 'Giriş başarılı' , $freelancerUser ], 200); 
+
+        }else{
+            return response()->json(['message' => 'Oturum açma başarısız'], 401);
         }
-        
-        return response()->json(['message' => 'Giriş başarılı'], 200);
     }
 
     function clienUserLogin(Request $req) {

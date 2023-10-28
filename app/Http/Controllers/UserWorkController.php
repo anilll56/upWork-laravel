@@ -111,4 +111,80 @@ class UserWorkController extends Controller
             return response()->json(['message' => 'getirilemedi'], 404);
         }
     }
+
+    function getTheClientJobById(Request $req){
+        $id = $req->input('id');
+        $customUserTable = 'client-work-table';
+        $data = DB::table($customUserTable)->where('id', $id)->get();
+        if($data){
+            return response()->json(['message' => 'başarıyla getirildi', 'data' => $data], 200);
+        }
+        else{
+            return response()->json(['message' => 'getirilemedi'], 404);
+        }
+    }
+
+    function  getTheFreelancerJobById(Request $req){
+        $id = $req->input('id');
+        $customUserTable = 'freelancer-work-table';
+        $data = DB::table($customUserTable)->where('id', $id)->get();
+        if($data){
+            return response()->json(['message' => 'başarıyla getirildi', 'data' => $data], 200);
+        }
+        else{
+            return response()->json(['message' => 'getirilemedi'], 404);
+        }
+    }
+
+    function updateClientWork(Request $req){
+        $id = $req->input('id');
+        $name = $req->input('name');
+        $email = $req->input('email');
+        $workType = $req->input('work-type');
+        $workDescription = $req->input('work-description');
+        $workPrice = $req->input('work-price');
+
+        $customUserTable = 'client-work-table';
+        $data = [
+            'name' => $name,
+            'email' => $email,
+            'work-type' => $workType,
+            'work-description' => $workDescription,
+            'work-price' => $workPrice,
+        ];
+        DB::table($customUserTable)->where('id', $id)->update($data);
+        if($data){
+            return response()->json(['message' => 'başarıyla güncellendi'], 200);
+        }
+        else{
+            return response()->json(['message' => 'güncellenemedi'], 404);
+        }
+    }
+
+    function updateFreelancerWork(Request $req){
+        $id = $req->input('id');
+        $name = $req->input('name');
+        $email = $req->input('email');
+        $workType = $req->input('work-type');
+        $workDescription = $req->input('work-description');
+        $workPrice = $req->input('work-price');
+
+        $customUserTable = 'freelancer-work-table';
+        $data = [
+            'name' => $name,
+            'email' => $email,
+            'work-type' => $workType,
+            'work-description' => $workDescription,
+            'work-price' => $workPrice,
+        ];
+        DB::table($customUserTable)->where('id', $id)->update($data);
+        if($data){
+            return response()->json(['message' => 'başarıyla güncellendi'], 200);
+        }
+        else{
+            return response()->json(['message' => 'güncellenemedi'], 404);
+        }
+    }
+
+    
 }
