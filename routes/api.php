@@ -24,10 +24,12 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route :: post("freelancerUserlogin",[UserController::class,'freelancerUserlogin']);
 Route :: post("freelancerUserRegister",[UserController::class,'freelancerUserRegister']);
 Route :: post("clientUserRegister",[UserController::class,'clientUserRegister']);
-Route :: post("clienUserLogin",[UserController::class,'clienUserLogin']);
+Route :: post("clienUserLogin",[UserController::class,'clientUserLogin']);
 
 Route :: post("OpenClientWork",[UserWorkController::class,'OpenClientWork']);
+Route :: post("updateClientWork",[UserWorkController::class,'updateClientWork']);
 Route :: get("getTheClientJob",[UserWorkController::class,'getTheClientJob']);
+Route :: get("getTheClientJobByEmail",[UserWorkController::class,'getTheClientJobByEmail']);
 Route :: post("deleteClientWork",[UserWorkController::class,'deleteClientWork']);
 Route :: post("openFreelancerWork",[UserWorkController::class,'openFreelancerWork']);
 Route :: get("getTheFreelancerJob",[UserWorkController::class,'getTheFreelancerJob']);

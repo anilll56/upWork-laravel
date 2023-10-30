@@ -18,7 +18,8 @@ return new class extends Migration
         $table->string('work-type');
         $table->string('work-description');
         $table->integer('work-price');
-        $table->boolen('hire' , [true,false])->default(false);
+        $table->string('hire')->default("false");
+        
 
         });
         //

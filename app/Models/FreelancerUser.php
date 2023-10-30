@@ -15,9 +15,9 @@ class FreelancerUser extends Model
         'name',
         'email',
         'password',
+        "remember_token",
         'talent',
         'price',
-        "id",
     ];
     
 
@@ -44,6 +44,7 @@ class FreelancerUser extends Model
             'name' => $name,
             'email' => $email,
             'password' => Hash::make($password),
+            "remember_token" => null,
             'talent' => $talent,
             'price' => $price,
         ]);

@@ -56,14 +56,21 @@ $this-> freelancerUser = $freelancerUser;
         $price = $req->input('price');
 
         $customUserTable = 'freelancer-users';
-
-        $freelancerUser = new FreelancerUser();
-        $freelancerUser->name = $name;
-        $freelancerUser->email = $email;
-        $freelancerUser->password = Hash::make($password);
-        $freelancerUser->talent = $talent;
-        $freelancerUser->price = $price;
-        $freelancerUser->save();
+        // $freelancerUser = new FreelancerUser();
+        // $freelancerUser->name = $name;
+        // $freelancerUser->email = $email;
+        // $freelancerUser->password = Hash::make($password);
+        // $freelancerUser->talent = $talent;
+        // $freelancerUser->price = $price;
+        // $freelancerUser->save();
+        DB::table($customUserTable)->insert([
+            'name' => $name,
+            'email' => $email,
+            'password' => Hash::make($password),
+            'talent' => $talent,
+            'price' => $price,
+        ]);
+        $freelancerUser = DB::table($customUserTable)->where('email', $email)->first();
         
         if($freelancerUser){
             return "başarılı";
@@ -117,22 +124,25 @@ $this-> freelancerUser = $freelancerUser;
         }
     }
 
-    function clienUserLogin(Request $req) {
-        $email = $req->input('email');
-        $password = $req->input('password');
+    public function clientUserLogin(Request $request)
+    {
+        $email = $request->input('email');
+        $password = $request->input('password');
         $customUserTable = 'client-users';
         $user = DB::table($customUserTable)->where('email', $email)->first();
-        
+        $userWorks = DB::table('client-work-table')->where('email', $email)->get();
+    
         if (!$user) {
             return response()->json(['message' => 'Kullanıcı bulunamadı'], 404);
         }
-        
+    
         if (!password_verify($password, $user->password)) {
-            return response()->json(['message' => 'Şifre uyuşmuyor', $user], 401);
+            return response()->json(['message' => 'Şifre uyuşmuyor'], 401);
         }
-        
-        return response()->json(['message' => 'Giriş başarılı'], 200);
+    
+        return response()->json(['message' => 'Giriş başarılı'  , $user,  $userWorks], 200);
     }
+    
 
 
 }
