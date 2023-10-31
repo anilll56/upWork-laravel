@@ -60,7 +60,7 @@ class UserWorkController extends Controller
         $data = [
             'name' => $name,
             'email' => $email,
-            'work-type' => $workType,
+            'work-type' => implode(', ', $workType),
             'work-description' => $workDescription,
             'work-price' => $workPrice,
         ];
@@ -124,10 +124,10 @@ class UserWorkController extends Controller
         }
     }
 
-    function  getTheFreelancerJobById(Request $req){
-        $id = $req->input('id');
+    function  getTheFreelancerJobByEmail(Request $req){
+        $email = $req->input('email');
         $customUserTable = 'freelancer-work-table';
-        $data = DB::table($customUserTable)->where('id', $id)->get();
+        $data = DB::table($customUserTable)->where('email', $email)->get();
         if($data){
             return response()->json(['message' => 'başarıyla getirildi', 'data' => $data], 200);
         }
@@ -174,28 +174,46 @@ class UserWorkController extends Controller
         }
     }
 
-    function updateFreelancerWork(Request $req){
+    function updateFreelancerWork(Request $req) {
         $id = $req->input('id');
         $name = $req->input('name');
-        $email = $req->input('email');
         $workType = $req->input('work-type');
+        $email = $req->input('email');
         $workDescription = $req->input('work-description');
         $workPrice = $req->input('work-price');
-
-        $customUserTable = 'freelancer-work-table';
-        $data = [
-            'name' => $name,
-            'email' => $email,
-            'work-type' => $workType,
-            'work-description' => $workDescription,
-            'work-price' => $workPrice,
-        ];
-        DB::table($customUserTable)->where('id', $id)->update($data);
-        if($data){
-            return response()->json(['message' => 'başarıyla güncellendi'], 200);
+    
+        // Veritabanından mevcut veriyi al
+        $existingData = DB::table('freelancer-work-table')->where('id', $id)->first();
+    
+        // Değişiklik yapılacak verileri belirle
+        $data = [];
+    
+        if (!empty($name)) {
+            $data['name'] = $name;
         }
-        else{
-            return response()->json(['message' => 'güncellenemedi'], 404);
+    
+        if (!empty($workType)) {
+            $data['work-type'] = $workType;
+        }
+    
+        if (!empty($email)) {
+            $data['email'] = $email;
+        }
+    
+        if (!empty($workDescription)) {
+            $data['work-description'] = $workDescription;
+        }
+    
+        if (!empty($workPrice)) {
+            $data['work-price'] = $workPrice;
+        }
+    
+        // Verileri güncelle
+        if (!empty($data)) {
+            DB::table('freelancer-work-table')->where('id', $id)->update($data);
+            return response()->json(['message' => 'Başarıyla güncellendi'], 200);
+        } else {
+            return response()->json(['message' => 'Değişiklik yapılmadı'], 200);
         }
     }
 

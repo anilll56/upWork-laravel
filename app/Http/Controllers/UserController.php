@@ -48,37 +48,37 @@ $this-> freelancerUser = $freelancerUser;
             return response()->json(['message' => 'silinemedi'], 404);
         }
 } 
-    function freelancerUserRegister(Request $req){
+function freelancerUserRegister(Request $req) {
+    try {
         $name = $req->input('name');
         $email = $req->input('email');
         $password = $req->input('password');
         $talent = $req->input('talent');
         $price = $req->input('price');
-
+        
         $customUserTable = 'freelancer-users';
-        // $freelancerUser = new FreelancerUser();
-        // $freelancerUser->name = $name;
-        // $freelancerUser->email = $email;
-        // $freelancerUser->password = Hash::make($password);
-        // $freelancerUser->talent = $talent;
-        // $freelancerUser->price = $price;
-        // $freelancerUser->save();
+
+        // Insert the data into the database
         DB::table($customUserTable)->insert([
             'name' => $name,
             'email' => $email,
             'password' => Hash::make($password),
-            'talent' => $talent,
+            'talent' => implode(', ', $talent),
             'price' => $price,
         ]);
+
+        // Attempt to retrieve the newly inserted record
         $freelancerUser = DB::table($customUserTable)->where('email', $email)->first();
-        
-        if($freelancerUser){
+
+        if ($freelancerUser) {
             return "başarılı";
-        }
-        else{
+        } else {
             return "başarısız";
         }
+    } catch (\Exception $e) {
+        return $e->getMessage();
     }
+}
 
     function clientUserRegister(Request $req){
         $name = $req->input('name');
