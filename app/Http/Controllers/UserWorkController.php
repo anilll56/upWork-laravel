@@ -217,5 +217,69 @@ class UserWorkController extends Controller
         }
     }
 
+    public function HireFreelancer(Request $request)
+    {
+        // Formdan gelen verileri al
+        $jobId = $request->input('jobId');
+        $name = $request->input('name');
+        $email = $request->input('email');
+        $freelancerInfo = $request->input('freelancerInfo');
+        
+        // Verileri job-applications tablosuna kaydet
+        DB::table('job-applications')->insert([
+            'jobId' => $jobId,
+            'name' => $name,
+            'email' => $email,
+            'freelancerInfo' => $freelancerInfo,
+            'status' => 'pending',
+        ]);
+        
+        DB::table('freelancer-work-table')->where('id', $jobId)->update([
+            'hire' => 'true',
+        ]);
+        
+        // Başvuru başarılı bir şekilde eklendiyse kullanıcıyı yönlendirme yapabilirsiniz
+        return response()->json(['message' => 'Başarıyla başvuru yapıldı'], 200);
+    }
+
+    public function applyForTheJob(Request $request)
+    {
+        // Formdan gelen verileri al
+        $jobId = $request->input('jobId');
+        $name = $request->input('name');
+        $email = $request->input('email');
+        $requesterInfo = $request->input('requesterInfo');
+        
+        // Verileri job-applications tablosuna kaydet
+        DB::table('job-applications')->insert([
+            'jobId' => $jobId,
+            'name' => $name,
+            'email' => $email,
+            'requesterInfo' => $requesterInfo,
+            'status' => 'pending',
+        ]);
+        
+        DB::table('client-work-table')->where('id', $jobId)->update([
+            'work-status' => 'pending',
+            "apployed-freelancersInfo" => $requesterInfo,
+        ]);
+        
+        // Başvuru başarılı bir şekilde eklendiyse kullanıcıyı yönlendirme yapabilirsiniz
+        return response()->json(['message' => 'Başarıyla başvuru yapıldı'], 200);
+    }
+
+    public function pendingJobs(Request $request)
+    {
+        $email = $request->input('email');
+        $status = $request->input('status');
+        
+        $jobs = DB::table('client-work-table')
+        ->where('email', $email)
+        ->where('work-status', $status) // Statüye göre filtreleme ekledik
+        ->get();    
+        
+        return response()->json(['message' => 'Başarıyla  getirildi' , $jobs], 200);
+    }
+    
     
 }

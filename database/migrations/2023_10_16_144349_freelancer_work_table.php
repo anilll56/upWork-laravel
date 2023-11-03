@@ -18,7 +18,7 @@ return new class extends Migration
         $table->string('work-type');
         $table->string('work-description');
         $table->integer('work-price');
-        $table->string('hire')->default("false");
+        $table->enum('work-status' , ["available" ,"pending","completed" ,"hired"])->default('available');
         
 
         });

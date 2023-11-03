@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\UserWorkController;
+use App\Http\Controllers\EmailController;
 
 /*
 |--------------------------------------------------------------------------
@@ -25,6 +26,7 @@ Route :: post("freelancerUserlogin",[UserController::class,'freelancerUserlogin'
 Route :: post("freelancerUserRegister",[UserController::class,'freelancerUserRegister']);
 Route :: post("clientUserRegister",[UserController::class,'clientUserRegister']);
 Route :: post("clienUserLogin",[UserController::class,'clientUserLogin']);
+Route :: post("loginUser",[UserController::class,'loginUser']);
 
 Route :: post("OpenClientWork",[UserWorkController::class,'OpenClientWork']);
 Route :: post("updateClientWork",[UserWorkController::class,'updateClientWork']);
@@ -36,3 +38,10 @@ Route :: post("openFreelancerWork",[UserWorkController::class,'openFreelancerWor
 Route :: get("getTheFreelancerJob",[UserWorkController::class,'getTheFreelancerJob']);
 Route :: post("updateFreelancerWork",[UserWorkController::class,'updateFreelancerWork']);
 Route :: post("deleteFreelancerWork",[UserWorkController::class,'deleteFreelancerWork']);
+
+Route :: post("sendEmail",[EmailController::class,'sendEmail']);
+
+Route::post("HireFreelancer",[UserWorkController::class,'HireFreelancer']);
+Route::post("applyForTheJob",[UserWorkController::class,'applyForTheJob']);
+Route::post("getTheAppliedJob",[UserWorkController::class,'getTheAppliedJob']);
+Route::post("pendingJobs",[UserWorkController::class,'pendingJobs']);

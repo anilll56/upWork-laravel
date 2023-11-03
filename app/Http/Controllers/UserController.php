@@ -10,28 +10,38 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use App\Models\FreelancerUser;
+use App\Models\ClientUser;
 
 
 
     
 class UserController extends Controller
 {
-    /**
-* The customer implementation.
+/**
+* The freelancer user implementation.
 *
 * @var FreelancerUser
 */
 protected FreelancerUser $freelancerUser;
 
 /**
+* The client user implementation.
+*
+* @var ClientUser
+*/
+protected ClientUser $clientUser;
+
+/**
 * Create a new controller instance.
 *
 * @param FreelancerUser  $freelancerUser
+* @param ClientUser  $clientUser
 * @return void
 */
-public function __construct(FreelancerUser $freelancerUser)
+public function __construct(FreelancerUser $freelancerUser, ClientUser $clientUser)
 {
-$this-> freelancerUser = $freelancerUser;
+    $this->freelancerUser = $freelancerUser;
+    $this->clientUser = $clientUser;
 }
 
     function getFreelancerUserWorkById(Request $req){
@@ -98,6 +108,28 @@ function freelancerUserRegister(Request $req) {
         }
         else{
             return "başarısız";
+        }
+    }
+
+    function loginUser (Request $req) {
+        $email = $req->input('email');
+        $password = $req->input('password');
+        $userType = $req->input('userType');
+
+        if($userType == 'freelancer'){
+            $user = $this->freelancerUser->findFreelancerUser($email, $password);
+        }
+        else if($userType == 'client'){
+            $user = $this->clientUser->clientUserLogin($email, $password);
+        }
+        if (!$user) {
+            return response()->json(['message' => 'Kullanıcı bulunamadı'], 404);
+        }
+        else if ($user) {
+            return response()->json(['message' => 'Giriş başarılı' , $user ], 200); 
+        }
+        else{
+            return response()->json(['message' => 'Oturum açma başarısız'], 401);
         }
     }
 

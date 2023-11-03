@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Hash;
 
 class ClientUser extends Model
 {
@@ -20,28 +21,23 @@ class ClientUser extends Model
     public function work() {
         return $this->hasMany('App\Models\ClientWork');
     }
-    public function findUser($email , $password , $table)
-    {
-        return $findUser = $this->where('email', $email)->first();
-    }
 
-    public function getClientUserWorkById($id)
+    public  function clientUserLogin($email , $password)
     {
-        return $this->hashMany('App\Models\ClientWork')->where('id', $id)->get();
-    }
-
-    public function getClientWorks ()
-    {
-        return $this->hasMany('App\Models\ClientWork');
-    }
-
-    public function getClientUserWorkByTalent($talent)
-    {
-        return $this->getClientWorks()->where('talent', $talent)->get();
+         $findUser = $this->where('email', $email)->first();
+         if ($findUser) {
+            if (Hash::check($password, $findUser->password)) {
+                return $findUser;
+            }
+            else {
+                return false;
+            }
+            
+         }
     }
     
-    public function getClientUserWorkByPrice($price)
+    public function getClientJobByEmail($email)
     {
-        return  $this->getUserByPrice() ->where('price', $price)->get();
+        return $this->hashMany('App\Models\ClientWork')->where('email', $email)->get();
     }
 }

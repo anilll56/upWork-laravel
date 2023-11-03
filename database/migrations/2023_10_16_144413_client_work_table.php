@@ -18,7 +18,8 @@ return new class extends Migration
         $table->string('work-type');
         $table->string('work-description');
         $table->integer('work-price');
-        $table->enum('work-status' , ["continues", "completed"])->default('continues');
+        $table->enum('work-status' , ["available" ,"pending","completed"])->default('available');
+        $table->string("apployed-freelancersInfo")->nullable();
         $table->json('employed-freelancers')->nullable();
         });
         //
