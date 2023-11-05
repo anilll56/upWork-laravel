@@ -174,6 +174,66 @@ function freelancerUserRegister(Request $req) {
     
         return response()->json(['message' => 'Giriş başarılı'  , $user,  $userWorks], 200);
     }
+
+    public function updateUser(Request $request)
+    {
+        $name = $request->input('name');
+        $email = $request->input('email');
+        $talent = $request->input('talent');
+        $price = $request->input('price');
+        $userType = $request->input('userType');
+        $customUserTable = 'freelancer-users';
+        $ClientTable= 'client-users';
+        $data = [];
+        if (!empty($name)) {
+            $data['name'] = $name;
+        }
+        if (!empty($email)) {
+            $data['email'] = $email;
+        }
+        if (!empty($talent)) {
+            $data['talent'] =  implode(', ', $talent);
+        }
+        if (!empty($price)) {
+            $data['price'] = $price;
+        }
+        if ($userType == 'freelancer') {
+            $user = DB::table($customUserTable)->where('email', $email)->update($data);
+            return response()->json(['message' => 'Güncelleme başarılı' , $user], 200);
+        } else if ($userType == 'client') {
+            $user = DB::table('client-users')->where('email', $email)->update($data);
+            return response()->json(['message' => 'Güncelleme başarılı' , $user], 200);
+        }
+    }
+
+    public function changePassword(Request $request)
+    {
+        $email = $request->input('email');
+        $password = $request->input('password');
+        $newPassword = $request->input('newPassword');
+        $userType = $request->input('userType');
+        $customUserTable = 'freelancer-users';
+        $clientTable= 'client-users';
+        $data = [];
+        if ($userType == 'freelancer') {
+            $user = DB::table($customUserTable)->where('email', $email)->first();
+            if (!password_verify($password, $user->password)) {
+                return response()->json(['message' => 'Şifre uyuşmuyor'], 401);
+            } else{
+                $data['password'] = Hash::make($newPassword);
+                $user = DB::table($customUserTable)->where('email', $email)->update($data);
+                return response()->json(['message' => 'Şifre değiştirme başarılı' , $user], 200);
+            }
+        } else if ($userType == 'client') {
+            $user = DB::table('client-users')->where('email', $email)->first();
+            if (!password_verify($password, $user->password)) {
+                return response()->json(['message' => 'Şifre uyuşmuyor'], 401);
+            }
+            $data['password'] = Hash::make($newPassword);
+            $user = DB::table($clientTable)->where('email', $email)->update($data);
+            return response()->json(['message' => 'Şifre değiştirme başarılı' , $user], 200);
+        }
+    }
     
 
 
