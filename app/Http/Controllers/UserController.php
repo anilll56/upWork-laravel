@@ -183,7 +183,7 @@ function freelancerUserRegister(Request $req) {
         $price = $request->input('price');
         $userType = $request->input('userType');
         $customUserTable = 'freelancer-users';
-        $ClientTable= 'client-users';
+        $clientTable= 'client-users';
         $data = [];
         if (!empty($name)) {
             $data['name'] = $name;
@@ -201,7 +201,7 @@ function freelancerUserRegister(Request $req) {
             $user = DB::table($customUserTable)->where('email', $email)->update($data);
             return response()->json(['message' => 'Güncelleme başarılı' , $user], 200);
         } else if ($userType == 'client') {
-            $user = DB::table('client-users')->where('email', $email)->update($data);
+            $user = DB::table($clientTable)->where('email', $email)->update($data);
             return response()->json(['message' => 'Güncelleme başarılı' , $user], 200);
         }
     }

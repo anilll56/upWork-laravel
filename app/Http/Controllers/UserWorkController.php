@@ -319,6 +319,20 @@ class UserWorkController extends Controller
     
         return response()->json(['message' => 'Başarıyla reddedildi'], 200);
     }
+
+    public function complateTheJob(Request $req){
+        $id = $req->input('id');
+        $customUserTable = 'client-work-table';
+         DB::table($customUserTable)->where('id', $id)->update([
+            'work-status' => 'completed',
+        ]);
+        if($id){
+            return response()->json(['message' => 'başarıyla düzenlendi'], 200);
+        }
+        else{
+            return response()->json(['message' => 'güncellenemedi'], 404);
+        }
+    }
     
     
 }

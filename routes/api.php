@@ -51,3 +51,4 @@ Route::post("pendingJobs",[UserWorkController::class,'pendingJobs']);
 Route::post("getEmployedFreelancersByEmail",[UserWorkController::class,'getEmployedFreelancersByEmail']);
 Route::post("acceptUserForTheJob",[UserWorkController::class,'acceptUserForTheJob']);
 Route::post("rejectUserForTheJob",[UserWorkController::class,'rejectUserForTheJob']);
+Route::post("complateTheJob",[UserWorkController::class,'complateTheJob']);
