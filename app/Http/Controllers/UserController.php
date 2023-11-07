@@ -133,47 +133,47 @@ function freelancerUserRegister(Request $req) {
         }
     }
 
-    function freelancerUserlogin(Request $req) {
-        $email = $req->input('email');
-        $password = $req->input('password');
-        $customUserTable = 'freelancer-users';
+    // function freelancerUserlogin(Request $req) {
+    //     $email = $req->input('email');
+    //     $password = $req->input('password');
+    //     $customUserTable = 'freelancer-users';
 
     
-        $freelancerUser = $this->freelancerUser->findFreelancerUser($email, $password);
+    //     $freelancerUser = $this->freelancerUser->findFreelancerUser($email, $password);
         
-        if (!$freelancerUser) {
-            return response()->json(['message' => 'Kullanıcı bulunamadı'], 404);
-        }
+    //     if (!$freelancerUser) {
+    //         return response()->json(['message' => 'Kullanıcı bulunamadı'], 404);
+    //     }
         
-        if (!password_verify($password, $freelancerUser->password)) {
-            return response()->json(['message' => 'Şifre uyuşmuyor'], 401);
+    //     if (!password_verify($password, $freelancerUser->password)) {
+    //         return response()->json(['message' => 'Şifre uyuşmuyor'], 401);
 
-        } if ($freelancerUser) {
-            return response()->json(['message' => 'Giriş başarılı' , $freelancerUser ], 200); 
+    //     } if ($freelancerUser) {
+    //         return response()->json(['message' => 'Giriş başarılı' , $freelancerUser ], 200); 
 
-        }else{
-            return response()->json(['message' => 'Oturum açma başarısız'], 401);
-        }
-    }
+    //     }else{
+    //         return response()->json(['message' => 'Oturum açma başarısız'], 401);
+    //     }
+    // }
 
-    public function clientUserLogin(Request $request)
-    {
-        $email = $request->input('email');
-        $password = $request->input('password');
-        $customUserTable = 'client-users';
-        $user = DB::table($customUserTable)->where('email', $email)->first();
-        $userWorks = DB::table('client-work-table')->where('email', $email)->get();
+    // public function clientUserLogin(Request $request)
+    // {
+    //     $email = $request->input('email');
+    //     $password = $request->input('password');
+    //     $customUserTable = 'client-users';
+    //     $user = DB::table($customUserTable)->where('email', $email)->first();
+    //     $userWorks = DB::table('client-work-table')->where('email', $email)->get();
     
-        if (!$user) {
-            return response()->json(['message' => 'Kullanıcı bulunamadı'], 404);
-        }
+    //     if (!$user) {
+    //         return response()->json(['message' => 'Kullanıcı bulunamadı'], 404);
+    //     }
     
-        if (!password_verify($password, $user->password)) {
-            return response()->json(['message' => 'Şifre uyuşmuyor'], 401);
-        }
+    //     if (!password_verify($password, $user->password)) {
+    //         return response()->json(['message' => 'Şifre uyuşmuyor'], 401);
+    //     }
     
-        return response()->json(['message' => 'Giriş başarılı'  , $user,  $userWorks], 200);
-    }
+    //     return response()->json(['message' => 'Giriş başarılı'  , $user,  $userWorks], 200);
+    // }
 
     public function updateUser(Request $request)
     {
@@ -232,6 +232,29 @@ function freelancerUserRegister(Request $req) {
             $data['password'] = Hash::make($newPassword);
             $user = DB::table($clientTable)->where('email', $email)->update($data);
             return response()->json(['message' => 'Şifre değiştirme başarılı' , $user], 200);
+        }
+    }
+
+    public function  getFreelancerUsers ()
+    {
+        $customUserTable = 'freelancer-users';
+        $users = DB::table($customUserTable)->get();
+        if ($users) {
+            return response()->json(['message' => 'Kullanıcı bulundu' , $users], 200);
+        } else {
+            return response()->json(['message' => 'Kullanıcı bulunamadı'], 404);
+        }
+    }
+
+    public function  getClientByEmail (Request $request)
+    {
+        $email = $request->input('email');
+        $customUserTable = 'client-users';
+        $user = DB::table($customUserTable)->where('email', $email)->first();
+        if ($user) {
+            return response()->json(['message' => 'Kullanıcı bulundu' , $user], 200);
+        } else {
+            return response()->json(['message' => 'Kullanıcı bulunamadı'], 404);
         }
     }
     

@@ -219,12 +219,11 @@ class UserWorkController extends Controller
 
     public function hireFreelancer(Request $request)
     {
-        // Formdan gelen verileri al
         $jobId = $request->input('jobId');
         $name = $request->input('name');
         $email = $request->input('email');
+
         
-        // Verileri job-applications tablosuna kaydet
         DB::table('job-applications')->insert([
             'jobId' => $jobId,
             'name' => $name,
@@ -235,6 +234,7 @@ class UserWorkController extends Controller
         
         DB::table('freelancer-work-table')->where('id', $jobId)->update([
             'work-status' => 'hired',
+            "client-email" => $email,
         ]);
         
         // Başvuru başarılı bir şekilde eklendiyse kullanıcıyı yönlendirme yapabilirsiniz
@@ -331,6 +331,54 @@ class UserWorkController extends Controller
         }
         else{
             return response()->json(['message' => 'güncellenemedi'], 404);
+        }
+    }
+
+    public function findAndHireFreelancer(Request $request)
+    {
+        $jobId = $request->input('jobId');
+        $name = $request->input('name');
+        $email = $request->input('email');
+        $freelancerEmail = $request->input('freelancerEmail');
+        $requesterInfo = (string) $request->input('requesterInfo');
+        
+        DB::table('job-applications')->insert([
+            'jobId' => $jobId,
+            'name' => $name,
+            'email' => $email,
+            'requesterInfo' => $requesterInfo,
+            'status' => 'pending',
+            "freelancerEmail" => $freelancerEmail,
+        ]);
+        DB::table('freelancer-user')->where('email', $freelancerEmail)->update([
+            'hireStatus' => 'pending',
+        ]);
+
+        return response()->json(['message' => 'Başarıyla davetiye gönderildi'], 200);
+    }
+
+    public function acceptJobFreelancerUser(Request $request)
+    {
+        $freelancerEmail = $request->input('freelancerEmail');
+        DB::table('freelancer-user')->where('email', $freelancerEmail)->update([
+            'hireStatus' => 'hired',
+        ]);
+        DB::table('job-applications')->where($freelancerEmail, $freelancerEmail)->update([
+            'status' => 'accepted',
+        ]);
+        
+    
+        return response()->json(['message' => 'Başarıyla kabul edildi'], 200);
+    }
+    public function getTheFreelancerJobByClientEmail(Request $req){
+        $email = $req->input('email');
+        $customUserTable = 'freelancer-work-table';
+        $data = DB::table($customUserTable)->where('client-email', $email)->get();
+        if($data){
+            return response()->json(['message' => 'başarıyla getirildi', 'data' => $data], 200);
+        }
+        else{
+            return response()->json(['message' => 'getirilemedi'], 404);
         }
     }
     

@@ -1,11 +1,25 @@
+<?php
+?>
+
 <!DOCTYPE html>
 <html>
     <head>
-        <title>İş Kabul</title>
+    <title><?php echo $title; ?></title>
     </head>
     <body>
-        <h1>İş Kabulu</h1>
-        <p>Merhaba, iş kabul edilmiştir.</p>
-        <!-- İş kabul edilmiş işle ilgili diğer bilgileri burada ekleyebilirsiniz -->
+        <h1>{{$title}}</h1>
+        <p>{{$data}}</p>
+     <p>
+     {{ $result->name ?? '' }}
+     </p>
+     <p>
+        {{ $result->email ?? '' }}
+        </p>
+        <p>
+            {{ $result['work-type'] ?? '' }}
+        </p>
+        <p>
+            {{ $result['work-description'] ?? '' }}
+        </p>
     </body>
 </html>

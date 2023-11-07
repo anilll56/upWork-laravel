@@ -19,6 +19,7 @@ return new class extends Migration
         $table->string('work-description');
         $table->integer('work-price');
         $table->enum('work-status' , ["available" ,"pending","completed" ,"hired"])->default('available');
+        $table->string("client-email")->nullable();
         
 
         });

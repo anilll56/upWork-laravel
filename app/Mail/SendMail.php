@@ -14,13 +14,18 @@ class SendMail extends Mailable
 {
     use Queueable, SerializesModels;
     public $input;
+    public $data;
+    public $result;
+    public $title;
 
     /**
      * Create a new message instance.
      */
-    public function __construct( $input)
+    public function __construct($title, $data , $result)
     {
-        $this->input = $input;
+        $this->title = $title;
+        $this->$data = $data;
+        $this->$result = $result;
     }
 
     /**
@@ -61,7 +66,7 @@ class SendMail extends Mailable
         ->from($address, $name)
         ->cc($address, $name)
         ->replyTo($address, $name)
-        ->subject("This is a demo!")
-        ->with($this->input); 
+        ->subject($this->title) 
+        >with(['data' => $this->data, 'result' => $this->result]); 
     }
 }

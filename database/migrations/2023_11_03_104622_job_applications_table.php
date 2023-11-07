@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('email');
             $table->string('requesterInfo');
             $table->enum('status', ["pending", "accepted", "rejected"])->default('pending');
+            $table->string("freelancerEmail")->nullable();
             $table->timestamps();
         });
     }

@@ -29,6 +29,9 @@ Route :: post("clienUserLogin",[UserController::class,'clientUserLogin']);
 Route :: post("loginUser",[UserController::class,'loginUser']);
 Route :: post("updateUser",[UserController::class,'updateUser']);
 Route :: post("changePassword",[UserController::class,'changePassword']);
+Route :: post("getClientByEmail",[UserController::class,'getClientByEmail']);
+
+Route:: get("getFreelancerUsers",[UserController::class,'getFreelancerUsers']);
 
 Route :: post("OpenClientWork",[UserWorkController::class,'OpenClientWork']);
 Route :: post("updateClientWork",[UserWorkController::class,'updateClientWork']);
@@ -52,3 +55,7 @@ Route::post("getEmployedFreelancersByEmail",[UserWorkController::class,'getEmplo
 Route::post("acceptUserForTheJob",[UserWorkController::class,'acceptUserForTheJob']);
 Route::post("rejectUserForTheJob",[UserWorkController::class,'rejectUserForTheJob']);
 Route::post("complateTheJob",[UserWorkController::class,'complateTheJob']);
+
+Route::post("findAndHireFreelancer",[UserWorkController::class,'findAndHireFreelancer']);
+Route::post("acceptJobFreelancerUser",[UserWorkController::class,'acceptJobFreelancerUser']);
+Route::post("getTheFreelancerJobByClientEmail",[UserWorkController::class,'getTheFreelancerJobByClientEmail']);

@@ -20,6 +20,7 @@ return new class extends Migration
         $table->string('talent')->nullable();
         $table->integer('price');
         $table->string('role')->default('freelancer');
+        $table->string("hireStatus")->nullable();
         });
     }
 
